@@ -2,6 +2,7 @@
 #include <geometry_msgs/Twist.h>
 // boost components
 #include <ctime>
+#include <cstdint>
 #include <iostream>
 #include <string>
 #include <boost/array.hpp>
@@ -59,9 +60,15 @@ void ROSnode::runContinuously(){
 
 void ROSnode::cmd_vel_callback(const geometry_msgs::Twist::ConstPtr& vel){
 	size_t sentBytes;
-	boost::array<char, 350> send_buf;
+	int32_t vel1, vel2;	
+	boost::array<int32_t, 2> send_buf;
+	/*
+		Calculate wheels speed in order to get the desired speed
+	*/
+	send_buf.at(0) = -10;
+	send_buf.at(1) = 20;
 	mySocket.send_to(boost::asio::buffer(send_buf), *(destination.get()));
-	ROS_INFO("");
+	ROS_INFO("cmd_vel sent to nucleo board");
 }
 
 void ROSnode::getYamlParams(){
